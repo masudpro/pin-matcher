@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="randomNumber" class="form-control" type="text" disabled>
+                    <button onclick="randomNumber()" class="generate-btn">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                   
+                    <input id="numberInput" class="form-control" type="text" disabled min="1000" max="9999">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div onclick="numberClick('seven')" id="seven"  class="button">7</div>
+                              <div onclick="numberClick('eight')" id="eight" class="button">8</div>
+                              <div onclick="numberClick('nine')" id="nine" class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick="numberClick('four')" id="four" class="button">4</div>
+                              <div onclick="numberClick('five')" id="five" class="button">5</div>
+                              <div onclick="numberClick('six')" id="six" class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick="numberClick('one')" id="one" class="button">1</div>
+                              <div onclick="numberClick('two')" id="two" class="button">2</div>
+                              <div onclick="numberClick('three')" id="three" class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div onclick="individualClear()" id="individualClear" class="button"> < </div>
+                                <div onclick="numberClick('zero')" id="zero" class="button">0</div>
+                                <div onclick="allClear()" id="clear" class="button">C</div>
+                            </div>
+                            <div>
+                                <button id="submitBtn" onclick="submit()" type="submit" class="submit-btn">Submit</button>
+                               
+                                <p id="tryCount" class="action-left"><span id="decreaseNum">3 </span>try left</p>
+                                <p class="my-2" id="NoTry">You Can Not try more.</p>
+                            </div>
+                        </div>    
+                    </div>
+                    
+                </div>
+            </div>
+           
+        </div>
+        <div id="pinSms" class="notify-section">
+            <p id="pinNotMatched" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="pinMatched" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+</div> 
+    <script>
+
+
+     // Global variable   
+        let inputValue = document.getElementById('numberInput');
+        let randomValue = document.getElementById('randomNumber');
+
+        const pinMatchedSms = document.getElementById("pinMatched");
+        const pinNotMatchedSms = document.getElementById("pinNotMatched");
+    // Global Function      
+        function pinMatch() {
+            pinMatchedSms.style.display = "none";
+         pinNotMatchedSms.style.display = "none";  
+        }
+    // Random Number       
+        function  randomNumber() {
+        var randomNumber = Math.floor(1000 + Math.random() * 9000);
+          randomValue.value = randomNumber;
+          pinMatch();
+          
+        }
+    // 0 to 9 Number     
+        function numberClick(number){
+            inputValue.value += document.getElementById(number).innerText;
+            pinMatch();
+        }
+    // All clear     
+        function allClear(){  
+            inputValue.value = '';
+            pinMatch();
+       }
+    // Individual clear   
+        function individualClear(){
+            let backSpace = inputValue;
+            backSpace.value = backSpace.value.slice(0, - 1);
+            pinMatch();
+        }
+    // Submit Button  
+
+        function submit(){
+
+            if( inputValue.value.length < 4 || inputValue.value.length > 4 ){
+                alert("Enter four digit number");  
+            }
+            else if (inputValue.value == randomValue.value){
+                pinMatchedSms.style.display = "block"; 
+                
+            }
+
+            
+            else if(inputValue.value != randomValue.value && decreaseNum.innerText > 0  ){
+                let decreaseNum =parseInt( document.getElementById("decreaseNum").innerText);
+                let newDecreaseNum = decreaseNum - 1;
+                document.getElementById("decreaseNum").innerText =newDecreaseNum + " "; 
+                document.getElementById("tryCount").style.display = "block";
+                pinNotMatchedSms.style.display = "block"; 
+            }
+            
+            else if(decreaseNum.innerText >= 0){
+                document.getElementById("submitBtn").disabled = true;
+                document.getElementById("tryCount").style.display = "none";
+                document.getElementById("NoTry").style.display = "block";
+                pinNotMatchedSms.style.display = "block"; 
+            }
+       }
+
+
+   
+        </script>
+</body>
+</html>
+
+
+
